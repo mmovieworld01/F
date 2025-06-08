@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Kotta Streaming Player</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { background: #181818; color: #fff; font-family: Arial, sans-serif; margin: 0; }
+        .container { max-width: 700px; margin: 40px auto; background: #232323; border-radius: 10px; padding: 24px; }
+        h1 { color: #ffb400; }
+        video { width: 100%; border-radius: 8px; background: #000; }
+        #status { margin: 18px 0; color: #ffb400; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Kotta Streaming Player</h1>
+    <div id="status">Loading video...</div>
+    <video id="player" controls></video>
+</div>
+<script>
+const chunkUrls = ["https:\/\/raw.githubusercontent.com\/mmovieworld01\/F1\/main\/V\/1_4K\/68455dd56938b_Blender Realistic Ocean  Complete Tutorial for Stunning CGI Seascape_1080p.mp4.chunk0","https:\/\/raw.githubusercontent.com\/mmovieworld01\/F1\/main\/V\/1_4K\/68455dd56938b_Blender Realistic Ocean  Complete Tutorial for Stunning CGI Seascape_1080p.mp4.chunk1","https:\/\/raw.githubusercontent.com\/mmovieworld01\/F1\/main\/V\/1_4K\/68455dd56938b_Blender Realistic Ocean  Complete Tutorial for Stunning CGI Seascape_1080p.mp4.chunk2","https:\/\/raw.githubusercontent.com\/mmovieworld01\/F1\/main\/V\/1_4K\/68455dd56938b_Blender Realistic Ocean  Complete Tutorial for Stunning CGI Seascape_1080p.mp4.chunk3","https:\/\/raw.githubusercontent.com\/mmovieworld01\/F1\/main\/V\/1_4K\/68455dd56938b_Blender Realistic Ocean  Complete Tutorial for Stunning CGI Seascape_1080p.mp4.chunk4","https:\/\/raw.githubusercontent.com\/mmovieworld01\/F1\/main\/V\/1_4K\/68455dd56938b_Blender Realistic Ocean  Complete Tutorial for Stunning CGI Seascape_1080p.mp4.chunk5","https:\/\/raw.githubusercontent.com\/mmovieworld01\/F1\/main\/V\/1_4K\/68455dd56938b_Blender Realistic Ocean  Complete Tutorial for Stunning CGI Seascape_1080p.mp4.chunk6"];
+const key = "6EbQHQeuDR8mbz\/PLIscFoZVqHJZW02oJqag5yaHW20=";
+const iv = "KwutLXe6dmWeQMtiOIfz9w==";
+
+async function fetchAndDecryptChunk(url, keyBytes, ivBytes) {
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error("Failed to fetch chunk: " + url);
+    const enc = await resp.arrayBuffer();
+    const cryptoKey = await window.crypto.subtle.importKey(
+        "raw", keyBytes, { name: "AES-CBC" }, false, ["decrypt"]
+    );
+    const dec = await window.crypto.subtle.decrypt(
+        { name: "AES-CBC", iv: ivBytes },
+        cryptoKey, enc
+    );
+    return new Uint8Array(dec);
+}
+
+async function loadAndPlay() {
+    document.getElementById("status").textContent = "Preparing video stream...";
+    const keyBytes = Uint8Array.from(atob(key), c => c.charCodeAt(0));
+    const ivBytes = Uint8Array.from(atob(iv), c => c.charCodeAt(0));
+    const player = document.getElementById("player");
+
+    if (!window.MediaSource) {
+        document.getElementById("status").textContent = "MediaSource API not supported in this browser.";
+        return;
+    }
+
+    const mediaSource = new MediaSource();
+    player.src = URL.createObjectURL(mediaSource);
+
+    mediaSource.addEventListener('sourceopen', async () => {
+        // You may want to detect the correct mimeType for your video
+        // For MP4, try 'video/mp4; codecs="avc1.64001F, mp4a.40.2"'
+        // If you know your encoding, set it accordingly
+        let mimeType = 'video/mp4; codecs="avc1.64001F, mp4a.40.2"';
+        if (!MediaSource.isTypeSupported(mimeType)) {
+            mimeType = 'video/mp4';
+        }
+        const sourceBuffer = mediaSource.addSourceBuffer(mimeType);
+
+        let chunkIndex = 0;
+        let appendNextChunk = async () => {
+            if (chunkIndex >= chunkUrls.length) {
+                // All chunks appended
+                mediaSource.endOfStream();
+                document.getElementById("status").textContent = "Ready!";
+                return;
+            }
+            document.getElementById("status").textContent = `Processing chunk ${chunkIndex+1} of ${chunkUrls.length}...`;
+            try {
+                let dec = await fetchAndDecryptChunk(chunkUrls[chunkIndex], keyBytes, ivBytes);
+                // Wait for SourceBuffer to be ready
+                await new Promise(resolve => {
+                    if (!sourceBuffer.updating) return resolve();
+                    sourceBuffer.addEventListener('updateend', resolve, { once: true });
+                });
+                sourceBuffer.appendBuffer(dec);
+                if (chunkIndex === 0) {
+                    // Start playing after first chunk
+                    player.play();
+                }
+                chunkIndex++;
+                // Wait for append to finish before next chunk
+                sourceBuffer.addEventListener('updateend', appendNextChunk, { once: true });
+            } catch (e) {
+                document.getElementById("status").textContent = "Error: " + e.message;
+                mediaSource.endOfStream("decode");
+            }
+        };
+        appendNextChunk();
+    });
+}
+
+window.onload = loadAndPlay;
+</script>
+</body>
+</html>
