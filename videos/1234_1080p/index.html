@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Watch: Blender Realistic Ocean  Complete Tutorial for Stunning CGI Seascape_1080p</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css" />
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.polyfilled.min.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: #111;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: #111;
+        }
+        .player-container {
+            width: 100vw;
+            min-height: 100vh;
+            background: #111;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .video-title {
+            color: #fff;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 0.5em;
+            text-align: center;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 8px #000;
+        }
+        .plyr__video-embed, .plyr__video-wrapper, video {
+            border-radius: 12px;
+            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.45);
+            background: #000;
+        }
+        .plyr {
+            max-width: 900px;
+            width: 90vw;
+            margin: 0 auto;
+        }
+        @media (max-width: 600px) {
+            .plyr {
+                width: 100vw;
+                max-width: 100vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="player-container">
+        <div class="video-title">Blender Realistic Ocean  Complete Tutorial for Stunning CGI Seascape_1080p</div>
+        <video id="player" playsinline controls poster="" style="width:100%;height:auto;"></video>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const video = document.getElementById('player');
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource('index.m3u8');
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                video.play();
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = 'index.m3u8';
+            video.addEventListener('loadedmetadata', function() {
+                video.play();
+            });
+        } else {
+            document.body.innerHTML += '<p style="color:red;text-align:center;">Your browser does not support HLS playback.</p>';
+        }
+        const player = new Plyr(video, {
+            controls: [
+                'play-large', 'rewind', 'play', 'fast-forward', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'pip', 'airplay', 'fullscreen'
+            ],
+            seekTime: 10,
+            tooltips: { controls: true, seek: true },
+            settings: ['quality', 'speed', 'loop'],
+            i18n: { restart: 'Restart', rewind: 'Rewind 10s', fastForward: 'Forward 10s' },
+        });
+    });
+    </script>
+</body>
+</html>
