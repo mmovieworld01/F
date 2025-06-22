@@ -23,9 +23,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
             height: 100vh;
-        }
-
-        .player-container {
+        }        .player-container {
             position: relative;
             width: 100vw;
             height: 100vh;
@@ -36,6 +34,28 @@
             width: 100% !important;
             height: 100% !important;
             background: transparent !important;
+        }
+
+        /* Mobile-specific video and container sizing */
+        @media (max-width: 768px) {
+            .player-container {
+                width: 100vw !important;
+                height: 100vh !important;
+                position: relative !important;
+                overflow: hidden;
+            }
+            
+            .video-js {
+                width: 100vw !important;
+                height: 100vh !important;
+                position: relative !important;
+            }
+            
+            .video-js video {
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: contain !important;
+            }
         }
 
         /* Force hide Video.js overlays (but preserve subtitles) */
@@ -121,8 +141,7 @@
         /* Hide default Video.js control bar */
         .video-js .vjs-control-bar {
             display: none !important;
-        }        /* Custom Modern Control Bar */
-        .custom-control-bar {
+        }        /* Custom Modern Control Bar */        .custom-control-bar {
             position: absolute;
             bottom: 0;
             left: 0;
@@ -133,14 +152,149 @@
             transition: all 0.3s ease;
             transform: translateY(100%);
             opacity: 0;
-        }
-
-        .custom-control-bar.show {
+            width: 100%;
+            box-sizing: border-box;
+        }.custom-control-bar.show {
             transform: translateY(0);
             opacity: 1;
+        }        /* Force controls to be visible on touch devices when shown */
+        @media (pointer: coarse) {
+            .custom-control-bar.show {
+                transform: translateY(0) !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                display: block !important;
+            }
         }
 
-        /* Fullscreen control bar positioning */
+        /* Additional mobile control visibility fix */
+        @media (max-width: 768px) {
+            .custom-control-bar.show {
+                transform: translateY(0) !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                display: block !important;
+                z-index: 999999 !important;
+            }
+        }/* Additional mobile-specific adjustments */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .custom-control-bar {
+                position: fixed !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100vw !important;
+                padding: 8px 0px 12px 0px !important;
+                z-index: 2147483647 !important;
+            }
+            
+            .custom-progress-container {
+                margin-left: 12px;
+                margin-right: 12px;
+                margin-bottom: 12px;
+            }
+            
+            .custom-controls {
+                padding: 0 12px;
+            }        }        /* Small mobile devices - ensure controls match video width exactly */
+        @media (max-width: 480px) {
+            .custom-control-bar {
+                padding: 8px 0px 12px 0px !important;
+                margin: 0 !important;
+                box-sizing: border-box !important;
+                width: 100% !important; /* Use 100% instead of 100vw for proper alignment */
+                left: 0 !important;
+                right: 0 !important;
+            }
+            
+            .custom-control-bar.show {
+                transform: translateY(0) !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                display: block !important;
+            }
+            
+            /* Hide volume container on small mobile devices */
+            .custom-volume-container {
+                display: none !important;
+            }
+            
+            /* Show volume container in fullscreen on small mobile */
+            .video-js.vjs-fullscreen .custom-volume-container,
+            .video-js:-webkit-full-screen .custom-volume-container,
+            .video-js:-moz-full-screen .custom-volume-container,
+            .video-js:-ms-fullscreen .custom-volume-container {
+                display: flex !important;
+                gap: 6px !important;
+            }
+            
+            .custom-progress-container {
+                margin-left: 0px !important;
+                margin-right: 0px !important;
+                margin-bottom: 10px;
+                padding-left: 10px;
+                padding-right: 10px;
+                box-sizing: border-box;
+                width: 100% !important;
+            }
+            
+            .custom-controls {
+                padding: 0 10px;
+                gap: 8px;
+                width: 100% !important;
+                box-sizing: border-box;
+            }
+            
+            .custom-btn {
+                padding: 10px;
+                min-width: 40px;
+                min-height: 40px;
+            }
+            
+            .custom-play-btn {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .custom-time-display {
+                font-size: 11px;
+                min-width: 50px;
+            }
+        }        /* Ensure control bar spans full width on all mobile devices */
+        @media screen and (max-device-width: 768px) {
+            .player-container .custom-control-bar {
+                position: absolute !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100vw !important;
+                margin: 0 !important;
+                box-sizing: border-box !important;
+            }
+            
+            .video-js .custom-control-bar {
+                width: 100vw !important;
+                left: 0 !important;
+                right: 0 !important;
+            }
+            
+            .custom-progress-bar {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-sizing: border-box !important;
+            }
+            
+            /* Ensure progress bar container spans exactly as the video */
+            .custom-progress-container {
+                width: 100% !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 15px !important;
+                padding-right: 15px !important;
+                box-sizing: border-box !important;
+            }
+        }        /* Fullscreen control bar positioning */
         .video-js.vjs-fullscreen .custom-control-bar,
         .video-js:-webkit-full-screen .custom-control-bar,
         .video-js:-moz-full-screen .custom-control-bar,
@@ -153,20 +307,28 @@
             width: 100% !important;
         }
 
+        /* Show volume container in fullscreen mode on mobile */
+        @media (max-width: 768px) {
+            .video-js.vjs-fullscreen .custom-volume-container,
+            .video-js:-webkit-full-screen .custom-volume-container,
+            .video-js:-moz-full-screen .custom-volume-container,
+            .video-js:-ms-fullscreen .custom-volume-container {
+                display: flex !important;
+                gap: 6px !important;
+            }
+        }
+
         /* Ensure fullscreen container allows proper positioning */
         .video-js.vjs-fullscreen,
         .video-js:-webkit-full-screen,
         .video-js:-moz-full-screen,
         .video-js:-ms-fullscreen {
             position: relative !important;
-        }
-
-        .custom-progress-container {
+        }        .custom-progress-container {
             margin-bottom: 15px;
             position: relative;
-        }
-
-        .custom-progress-bar {
+            width: 100%;
+        }        .custom-progress-bar {
             width: 100%;
             height: 6px;
             background: rgba(255, 255, 255, 0.2);
@@ -174,7 +336,9 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
-        }        .custom-progress-buffer {
+        }
+
+        .custom-progress-buffer {
             height: 100%;
             background: #804515;
             border-radius: 3px;
@@ -326,9 +490,7 @@
 
         .custom-dropdown {
             position: relative;
-        }
-
-        .custom-dropdown-menu {
+        }        .custom-dropdown-menu {
             position: absolute;
             bottom: 45px;
             right: 0;
@@ -342,12 +504,51 @@
             transform: translateY(10px);
             transition: all 0.3s ease;
             z-index: 1700;
+            display: none; /* Force hidden by default */
+            pointer-events: none; /* Prevent interaction when hidden */
         }
 
         .custom-dropdown.active .custom-dropdown-menu {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
+            display: block; /* Show when active */
+            pointer-events: auto; /* Allow interaction when shown */
+        }/* Mobile-specific dropdown fixes */
+        @media (max-width: 768px) {
+            /* Force all dropdowns hidden by default on mobile */
+            .custom-dropdown-menu {
+                opacity: 0 !important;
+                visibility: hidden !important;
+                display: none !important;
+                transform: translateY(10px) !important;
+                pointer-events: none !important;
+            }
+            
+            /* Only show when explicitly active */
+            .custom-dropdown.active .custom-dropdown-menu {
+                opacity: 1 !important;
+                visibility: visible !important;
+                display: block !important;
+                transform: translateY(0) !important;
+                z-index: 999999 !important;
+                pointer-events: auto !important;
+            }
+            
+            /* Better positioning on mobile */
+            .custom-dropdown-menu {
+                bottom: 50px;
+                right: 5px;
+                min-width: 100px;
+            }
+            
+            /* Ensure dropdowns don't interfere with controls */
+            .custom-dropdown:not(.active) .custom-dropdown-menu {
+                display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                pointer-events: none !important;
+            }
         }
 
         .custom-dropdown-item {
@@ -413,20 +614,53 @@
             font-style: normal;
             font-size: 11px;
             font-weight: bold;
-        }
-
-        /* Mobile responsive */
+        }        /* Mobile responsive */
         @media (max-width: 768px) {
             .custom-control-bar {
-                padding: 10px 15px 15px 15px;
+                padding: 10px 0px 15px 0px !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important; /* Use 100% instead of 100vw for proper container alignment */
+                box-sizing: border-box !important;
+                position: absolute !important;
+                bottom: 0 !important;
+                margin: 0 !important;
             }
             
-            .custom-controls {
-                gap: 10px;
+            .custom-control-bar.show {
+                transform: translateY(0) !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                display: block !important;
+                z-index: 999999 !important;
             }
-              .custom-volume-container {
-                display: flex;
-                gap: 6px;
+            
+            /* Force controls to be visible when show class is added */
+            .custom-control-bar.show * {
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+              .custom-progress-container {
+                margin-bottom: 15px;
+                margin-left: 15px !important; /* Add proper margins for alignment */
+                margin-right: 15px !important;
+                position: relative;
+                width: calc(100% - 30px) !important; /* Account for margins */
+                box-sizing: border-box;
+            }
+              .custom-controls {
+                gap: 10px;
+                padding: 0 15px; /* Add padding inside controls container */
+                width: 100% !important;
+                box-sizing: border-box;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+            }
+            
+            /* Hide volume container on mobile non-fullscreen */
+            .custom-volume-container {
+                display: none !important;
             }
             
             .custom-volume-slider {
@@ -437,7 +671,19 @@
                 font-size: 12px;
                 min-width: 60px;
             }
-        }        .video-js .vjs-big-play-button {
+            
+            /* Make controls more touch-friendly on mobile */
+            .custom-btn {
+                padding: 12px;
+                min-width: 44px;
+                min-height: 44px;
+            }
+            
+            .custom-play-btn {
+                width: 52px;
+                height: 52px;
+            }
+        }.video-js .vjs-big-play-button {
             font-size: 2.5em;
             line-height: 2em;
             height: 2em;
@@ -1125,18 +1371,257 @@
         let currentSubtitleSettings = { ...defaultSubtitleSettings };
           // Custom subtitle system
         let subtitleData = [];
-        let subtitleInterval = null;
-        let controlBarTimeout = null;
-        let isDragging = false;// Initialize the player when DOM is loaded
+        let subtitleInterval = null;        let controlBarTimeout = null;
+        let isDragging = false;
+        let postFullscreenExitCheck = null;
+
+        // Global emergency control shower
+        function emergencyShowControls() {
+            console.log('EMERGENCY: Forcing controls visible');
+            const controlBar = document.getElementById('customControlBar');
+            if (controlBar) {
+                controlBar.classList.add('show');
+                controlBar.style.cssText = `
+                    transform: translateY(0) !important;
+                    opacity: 1 !important;
+                    visibility: visible !important;
+                    display: block !important;
+                    position: absolute !important;
+                    bottom: 0 !important;
+                    left: 0 !important;
+                    right: 0 !important;
+                    width: 100% !important;
+                    margin: 0 !important;
+                    z-index: 999999 !important;
+                    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 70%, transparent 100%) !important;
+                    padding: 10px 0px 15px 0px !important;
+                    box-sizing: border-box !important;
+                `;
+                
+                // Force all children visible
+                const allChildren = controlBar.querySelectorAll('*');
+                allChildren.forEach(child => {
+                    child.style.visibility = 'visible';
+                    child.style.opacity = '1';
+                });
+                
+                console.log('EMERGENCY controls forced visible');
+                return true;
+            }
+            return false;
+        }        // Make it globally accessible
+        window.emergencyShowControls = emergencyShowControls;
+        
+        // Desktop debug function
+        function debugDesktopControls() {
+            console.log('=== Desktop Controls Debug ===');
+            const controlBar = document.getElementById('customControlBar');
+            const videoContainer = document.querySelector('.player-container');
+            
+            console.log('Control Bar found:', !!controlBar);
+            console.log('Video Container found:', !!videoContainer);
+            
+            if (controlBar) {
+                console.log('Control Bar classes:', controlBar.className);
+                console.log('Control Bar computed styles:', {
+                    display: getComputedStyle(controlBar).display,
+                    visibility: getComputedStyle(controlBar).visibility,
+                    opacity: getComputedStyle(controlBar).opacity,
+                    transform: getComputedStyle(controlBar).transform,
+                    bottom: getComputedStyle(controlBar).bottom,
+                    zIndex: getComputedStyle(controlBar).zIndex
+                });
+                
+                // Force show controls
+                showControls();
+                console.log('showControls() called');
+            }
+            
+            return { controlBar, videoContainer };
+        }
+        
+        // Make debug function globally accessible
+        window.debugDesktopControls = debugDesktopControls;
+
+        // Function to aggressively ensure controls after fullscreen exit
+        function ensureControlsAfterFullscreenExit() {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                           ('ontouchstart' in window) || 
+                           (navigator.maxTouchPoints > 0);
+              if (!isMobile) return;
+            
+            console.log('Starting AGGRESSIVE post-fullscreen-exit control check...');
+            let attempts = 0;
+            const maxAttempts = 20; // Increased attempts
+            
+            // Clear any existing check
+            if (postFullscreenExitCheck) {
+                clearInterval(postFullscreenExitCheck);
+            }
+            
+            postFullscreenExitCheck = setInterval(() => {
+                attempts++;
+                const controlBar = document.getElementById('customControlBar');
+                
+                if (controlBar && attempts < maxAttempts) {
+                    // Check if controls are visible using computed styles
+                    const computedStyle = window.getComputedStyle(controlBar);
+                    const isVisible = controlBar.classList.contains('show') && 
+                                     computedStyle.opacity !== '0' && 
+                                     computedStyle.visibility !== 'hidden' &&
+                                     computedStyle.display !== 'none';
+                    
+                    if (!isVisible) {
+                        console.log(`Attempt ${attempts}: FORCING controls visible after fullscreen exit`);
+                        
+                        // Remove any hiding classes
+                        controlBar.classList.remove('hide', 'hidden');
+                        controlBar.classList.add('show');
+                        
+                        // Force immediate visibility with direct style setting
+                        controlBar.style.transform = 'translateY(0)';
+                        controlBar.style.opacity = '1';
+                        controlBar.style.visibility = 'visible';
+                        controlBar.style.display = 'block';
+                        controlBar.style.position = 'absolute';
+                        controlBar.style.bottom = '0';
+                        controlBar.style.left = '0';
+                        controlBar.style.right = '0';
+                        controlBar.style.width = '100%';
+                        controlBar.style.zIndex = '999999';
+                        
+                        // Force child elements visible
+                        const allChildren = controlBar.querySelectorAll('*');
+                        allChildren.forEach(child => {
+                            child.style.visibility = 'visible';
+                            child.style.opacity = '1';                        });
+                        
+                        console.log('Controls forced visible - attempt', attempts);
+                    } else {
+                        console.log('Controls are now visible - stopping check');
+                        clearInterval(postFullscreenExitCheck);
+                    }
+                } else {
+                    console.log('Max attempts reached or control bar not found - stopping check');
+                    clearInterval(postFullscreenExitCheck);
+                }            }, 100); // Much faster checking interval - every 100ms
+            
+            // Auto-stop after 5 seconds
+            setTimeout(() => {
+                if (postFullscreenExitCheck) {
+                    clearInterval(postFullscreenExitCheck);
+                    console.log('AGGRESSIVE post-fullscreen control check completed');
+                }
+            }, 5000);
+        }
+
+        // Initialize the player when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             // Force hide all overlays immediately
             hideAllOverlays();
               initializePlayer();
             setupEventListeners();
-            loadSubtitleSettings();
-            initializeSubtitleSettingsPanel();
+            loadSubtitleSettings();            initializeSubtitleSettingsPanel();
+            
             initializeCustomControls();
-        });        function hideAllOverlays() {
+            
+            // Force close all dropdowns on page load (especially for mobile)
+            setTimeout(() => {
+                document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                });
+                console.log('All dropdowns closed on page load');
+            }, 500);
+            
+            // Ensure controls are visible on initial load
+            setTimeout(() => {
+                console.log('Initial control visibility check');
+                showControls();
+                  // Check device type and apply appropriate setup
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                               ('ontouchstart' in window) || 
+                               (navigator.maxTouchPoints > 0);
+                
+                const controlBar = document.getElementById('customControlBar');
+                if (controlBar) {
+                    controlBar.classList.add('show');
+                    
+                    if (isMobile) {
+                        controlBar.style.transform = 'translateY(0)';
+                        controlBar.style.opacity = '1';
+                        controlBar.style.visibility = 'visible';
+                        controlBar.style.display = 'block';
+                        console.log('Mobile initial controls forced visible');
+                    } else {
+                        // Desktop-specific initial setup
+                        controlBar.style.transform = 'translateY(0)';
+                        controlBar.style.opacity = '1';
+                        controlBar.style.visibility = 'visible';
+                        controlBar.style.display = 'block';
+                        controlBar.style.position = 'absolute';
+                        controlBar.style.bottom = '0';
+                        controlBar.style.width = '100%';
+                        controlBar.style.zIndex = '999999';
+                        console.log('Desktop initial controls forced visible');
+                    }
+                }
+            }, 1000);
+            
+            // Add universal control shower for any user interaction
+            const showControlsOnInteraction = () => {
+                console.log('User interaction detected - showing controls');
+                showControls();
+            };
+            
+            // Add event listeners for any user interaction
+            document.addEventListener('click', showControlsOnInteraction);
+            document.addEventListener('touchstart', showControlsOnInteraction);
+            document.addEventListener('keydown', showControlsOnInteraction);
+            
+            // Force show controls on mobile after a short delay
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                           ('ontouchstart' in window) || 
+                           (navigator.maxTouchPoints > 0);if (isMobile) {
+                setTimeout(() => {
+                    console.log('Force showing controls on mobile...');
+                    const controlBar = document.getElementById('customControlBar');
+                    if (controlBar) {
+                        // Force add the show class
+                        controlBar.classList.add('show');
+                        
+                        // Apply aggressive styling for mobile
+                        controlBar.style.cssText = `
+                            transform: translateY(0) !important;
+                            opacity: 1 !important;
+                            visibility: visible !important;
+                            display: block !important;
+                            position: absolute !important;
+                            bottom: 0 !important;
+                            left: 0 !important;
+                            right: 0 !important;
+                            width: 100vw !important;
+                            z-index: 999999 !important;
+                            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 70%, transparent 100%) !important;
+                            padding: 10px 0px 15px 0px !important;
+                        `;
+                        
+                        console.log('Control bar found, classes:', controlBar.className);
+                        console.log('Control bar is visible and positioned correctly');
+                        
+                        // Force show all child elements too
+                        const childElements = controlBar.querySelectorAll('*');
+                        childElements.forEach(child => {
+                            child.style.visibility = 'visible';
+                            child.style.opacity = '1';
+                        });
+                        
+                    } else {
+                        console.error('Control bar element not found!');
+                    }
+                }, 1000);            }
+        });
+        
+        function hideAllOverlays() {
             // Hide loading overlay
             const loadingOverlay = document.getElementById('loadingOverlay');
             if (loadingOverlay) {
@@ -1205,8 +1690,9 @@
                         smoothQualityChange: true,
                         overrideNative: true
                     }
-                }
-            });            // Set video source
+                }            });
+
+            // Set video source
             player.src({
                 src: CONFIG.videoSource,
                 type: 'application/vnd.apple.mpegurl'
@@ -1218,6 +1704,74 @@
                 hideLoading();
                 hideAllOverlays(); // Double-check all overlays are hidden
                 
+                // Add mobile tap handler for controls
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                               ('ontouchstart' in window) || 
+                               (navigator.maxTouchPoints > 0);
+                
+                if (isMobile) {
+                    // Add multiple event listeners for better mobile support
+                    const videoElement = player.el().querySelector('video');
+                    const playerEl = player.el();
+                    
+                    if (videoElement) {
+                        // Video element click/touch
+                        videoElement.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log('Video tapped - showing controls');
+                            showControls();
+                        });
+                        
+                        videoElement.addEventListener('touchend', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log('Video touched - showing controls');
+                            showControls();
+                        });                    }
+                    
+                    if (playerEl) {
+                        // Player container click/touch
+                        playerEl.addEventListener('click', function(e) {
+                            if (!e.target.closest('.custom-control-bar')) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                console.log('Player tapped - showing controls');
+                                
+                                // EMERGENCY: Force controls visible immediately
+                                const controlBar = document.getElementById('customControlBar');
+                                if (controlBar) {
+                                    controlBar.classList.add('show');
+                                    controlBar.style.transform = 'translateY(0)';
+                                    controlBar.style.opacity = '1';
+                                    controlBar.style.visibility = 'visible';
+                                    controlBar.style.display = 'block';
+                                }
+                                
+                                showControls();
+                                
+                                // Close any open dropdowns when tapping video
+                                document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+                                    dropdown.classList.remove('active');
+                                });
+                            }
+                        });
+                        
+                        playerEl.addEventListener('touchend', function(e) {
+                            if (!e.target.closest('.custom-control-bar')) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                console.log('Player touched - showing controls');
+                                showControls();
+                                
+                                // Close any open dropdowns when touching video
+                                document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+                                    dropdown.classList.remove('active');
+                                });
+                            }
+                        });                    }
+                }
+                
                 // Auto-enter fullscreen on mobile
                 if (isMobile()) {
                     player.requestFullscreen();
@@ -1226,34 +1780,172 @@
 
             player.on('loadstart', function() {
                 showLoading();
-            });            player.on('canplay', function() {
+            });
+
+            player.on('canplay', function() {
                 hideLoading();
                 hideAllOverlays(); // Remove overlays when video can play
                 console.log('Video can start playing');
-            });
-
-            player.on('error', function(e) {
+            });            player.on('error', function(e) {
                 console.error('Player error:', e);
                 showError('Failed to load video stream. Please check your connection and try again.');
-            });            player.on('play', function() {
+            });
+
+            player.on('play', function() {
                 hideAllOverlays(); // Remove overlays when video starts playing
                 startSubtitleDisplay(); // Resume custom subtitle display
                 console.log('Video started playing');
-            });            player.on('pause', function() {
+                
+                // Show controls after play starts
+                setTimeout(() => {
+                    showControls();
+                    console.log('Controls shown after play start');
+                }, 100);
+            });
+
+            player.on('pause', function() {
                 if (subtitleInterval) {
                     clearInterval(subtitleInterval);
                 }
                 console.log('Video paused');
-            });
-
-            // Handle fullscreen changes
+                
+                // Show controls when paused
+                showControls();
+            });            // Handle fullscreen changes
             player.on('fullscreenchange', function() {
                 handleFullscreenSubtitles();
-            });            // Also listen for native fullscreen events
+                
+                // Additional mobile control handling
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                               ('ontouchstart' in window) || 
+                               (navigator.maxTouchPoints > 0);
+                
+                if (isMobile) {
+                    setTimeout(() => {
+                        console.log('Fullscreen change detected on mobile - ensuring controls');
+                        showControls();
+                        
+                        // If exiting fullscreen, force controls visible aggressively
+                        if (!player.isFullscreen()) {
+                            console.log('Exited fullscreen on mobile - aggressive control show');
+                            const controlBar = document.getElementById('customControlBar');
+                            if (controlBar) {
+                                controlBar.classList.add('show');
+                                controlBar.style.transform = 'translateY(0)';
+                                controlBar.style.opacity = '1';
+                                controlBar.style.visibility = 'visible';
+                                controlBar.style.display = 'block';
+                                controlBar.style.position = 'absolute';
+                                controlBar.style.bottom = '0';
+                                controlBar.style.width = '100%';
+                                controlBar.style.zIndex = '999999';
+                                
+                                // Start the aggressive monitoring
+                                ensureControlsAfterFullscreenExit();
+                            }
+                        }
+                    }, 200);
+                }
+            });// Also listen for native fullscreen events
             document.addEventListener('fullscreenchange', handleFullscreenSubtitles);
             document.addEventListener('webkitfullscreenchange', handleFullscreenSubtitles);
             document.addEventListener('mozfullscreenchange', handleFullscreenSubtitles);
             document.addEventListener('msfullscreenchange', handleFullscreenSubtitles);
+            
+            // Additional mobile fullscreen handling
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                           ('ontouchstart' in window) || 
+                           (navigator.maxTouchPoints > 0);
+              if (isMobile) {
+                // Add specific mobile fullscreen handlers
+                document.addEventListener('fullscreenchange', () => {
+                    const isFullscreen = document.fullscreenElement || 
+                                       document.webkitFullscreenElement || 
+                                       document.mozFullScreenElement || 
+                                       document.msFullscreenElement;
+                    
+                    if (!isFullscreen) {
+                        // EXITING fullscreen - this is the problematic case
+                        console.log('Native fullscreen EXIT detected on mobile - forcing controls');
+                        
+                        setTimeout(() => {
+                            const controlBar = document.getElementById('customControlBar');
+                            if (controlBar) {
+                                controlBar.classList.add('show');
+                                controlBar.style.cssText = `
+                                    transform: translateY(0) !important;
+                                    opacity: 1 !important;
+                                    visibility: visible !important;
+                                    display: block !important;
+                                    position: absolute !important;
+                                    bottom: 0 !important;
+                                    left: 0 !important;
+                                    right: 0 !important;
+                                    width: 100vw !important;
+                                    z-index: 999999 !important;
+                                    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 70%, transparent 100%) !important;
+                                    padding: 10px 0px 15px 0px !important;
+                                `;
+                                console.log('Forced controls after fullscreen exit - attempt 1');
+                            }
+                        }, 100);
+                        
+                        setTimeout(() => {
+                            showControls();
+                            console.log('Forced controls after fullscreen exit - attempt 2');
+                        }, 400);
+                        
+                        setTimeout(() => {
+                            const controlBar = document.getElementById('customControlBar');
+                            if (controlBar && !controlBar.classList.contains('show')) {
+                                controlBar.classList.add('show');
+                                console.log('Emergency force show class - attempt 3');
+                            }
+                        }, 700);
+                    } else {
+                        // Entering fullscreen
+                        setTimeout(() => {
+                            console.log('Native fullscreen ENTER detected on mobile - ensuring controls');
+                            showControls();
+                        }, 400);
+                    }
+                });
+                
+                document.addEventListener('webkitfullscreenchange', () => {
+                    const isFullscreen = document.webkitFullscreenElement;
+                    
+                    if (!isFullscreen) {
+                        // EXITING fullscreen
+                        console.log('Webkit fullscreen EXIT detected on mobile - forcing controls');
+                        
+                        setTimeout(() => {
+                            const controlBar = document.getElementById('customControlBar');
+                            if (controlBar) {
+                                controlBar.classList.add('show');
+                                controlBar.style.cssText = `
+                                    transform: translateY(0) !important;
+                                    opacity: 1 !important;
+                                    visibility: visible !important;
+                                    display: block !important;
+                                    position: absolute !important;
+                                    bottom: 0 !important;
+                                    left: 0 !important;
+                                    right: 0 !important;
+                                    width: 100vw !important;
+                                    z-index: 999999 !important;
+                                    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 70%, transparent 100%) !important;
+                                    padding: 10px 0px 15px 0px !important;
+                                `;
+                                console.log('Webkit forced controls after fullscreen exit');
+                            }
+                        }, 200);
+                        
+                        setTimeout(() => {
+                            showControls();
+                        }, 500);
+                    }
+                });
+            }
 
             // Override Video.js caption settings to use our custom panel
             player.ready(() => {
@@ -1273,11 +1965,12 @@
             player.on('loadeddata', function() {
                 console.log('Video data loaded, checking subtitles...');
                 const tracks = player.textTracks();
-                console.log('Available text tracks:', tracks.length);
-                for (let i = 0; i < tracks.length; i++) {
+                console.log('Available text tracks:', tracks.length);                for (let i = 0; i < tracks.length; i++) {
                     console.log(`Track ${i}:`, tracks[i].label, tracks[i].language, tracks[i].mode);
                 }
-            });            // Add subtitle support using both Video.js (for menu) and custom overlay (for display)
+            });
+
+            // Add subtitle support using both Video.js (for menu) and custom overlay (for display)
             addSubtitleSupport();
             loadCustomSubtitles();
 
@@ -1407,12 +2100,19 @@
                 // Hide subtitle when no cue is active
                 subtitleElement.style.display = 'none';
             }
-        }        function handleFullscreenSubtitles() {
+        }
+        
+        function handleFullscreenSubtitles() {
             const subtitleOverlay = document.getElementById('customSubtitles');
             const controlBar = document.getElementById('customControlBar');
             const subtitleSettings = document.getElementById('subtitleSettings');
             const contextMenu = document.getElementById('contextMenu');
             const videoContainer = document.querySelector('.video-js');
+            
+            // Check if we're on mobile
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                           ('ontouchstart' in window) || 
+                           (navigator.maxTouchPoints > 0);
             
             // Check if we're in fullscreen
             const isFullscreen = document.fullscreenElement || 
@@ -1445,8 +2145,30 @@
                     }
                 }
                 
-                // Force show controls briefly in fullscreen
+                // Force show controls in fullscreen
                 showControls();
+                
+                // On mobile, ensure controls are properly styled for fullscreen
+                if (isMobile && controlBar) {
+                    setTimeout(() => {
+                        controlBar.classList.add('show');
+                        controlBar.style.cssText = `
+                            transform: translateY(0) !important;
+                            opacity: 1 !important;
+                            visibility: visible !important;
+                            display: block !important;
+                            position: fixed !important;
+                            bottom: 0 !important;
+                            left: 0 !important;
+                            right: 0 !important;
+                            width: 100vw !important;
+                            z-index: 2147483647 !important;
+                            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 70%, transparent 100%) !important;
+                            padding: 10px 0px 15px 0px !important;
+                        `;
+                        console.log('Mobile fullscreen controls applied');
+                    }, 100);
+                }
                 
             } else {
                 console.log('Exiting fullscreen - restoring all UI elements');
@@ -1465,6 +2187,102 @@
                     if (contextMenu) {
                         playerContainer.appendChild(contextMenu);
                     }
+                }                // On mobile, ensure controls are properly restored after exiting fullscreen
+                if (isMobile && controlBar) {
+                    console.log('Mobile detected - restoring controls after fullscreen exit');
+                    
+                    // Multiple attempts with different timings to ensure controls show
+                    setTimeout(() => {
+                        controlBar.classList.add('show');
+                        controlBar.style.cssText = `
+                            transform: translateY(0) !important;
+                            opacity: 1 !important;
+                            visibility: visible !important;
+                            display: block !important;
+                            position: absolute !important;
+                            bottom: 0 !important;
+                            left: 0 !important;
+                            right: 0 !important;
+                            width: 100% !important;
+                            margin: 0 !important;
+                            z-index: 999999 !important;
+                            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 70%, transparent 100%) !important;
+                            padding: 10px 0px 15px 0px !important;
+                            box-sizing: border-box !important;
+                        `;
+                        
+                        // Force all child elements visible and properly aligned
+                        const progressContainer = controlBar.querySelector('.custom-progress-container');
+                        const controls = controlBar.querySelector('.custom-controls');
+                        
+                        if (progressContainer) {
+                            progressContainer.style.cssText = `
+                                margin-left: 15px !important;
+                                margin-right: 15px !important;
+                                margin-bottom: 15px !important;
+                                width: calc(100% - 30px) !important;
+                                box-sizing: border-box !important;
+                            `;
+                        }
+                        
+                        if (controls) {
+                            controls.style.cssText = `
+                                padding: 0 15px !important;
+                                width: 100% !important;
+                                box-sizing: border-box !important;
+                                display: flex !important;
+                                align-items: center !important;
+                                justify-content: space-between !important;
+                            `;
+                        }
+                        
+                        console.log('First attempt - Mobile controls restored with proper alignment');
+                    }, 100);
+                    
+                    // Second attempt with longer delay
+                    setTimeout(() => {
+                        controlBar.classList.add('show');
+                        
+                        // Reset any conflicting styles
+                        controlBar.style.position = 'absolute';
+                        controlBar.style.width = '100%';
+                        controlBar.style.left = '0';
+                        controlBar.style.right = '0';
+                        controlBar.style.margin = '0';
+                        controlBar.style.transform = 'translateY(0)';
+                        
+                        showControls(); // Call the showControls function too
+                        console.log('Second attempt - Mobile controls restored with alignment fix');
+                    }, 300);
+                    
+                    // Third attempt - most aggressive
+                    setTimeout(() => {
+                        controlBar.classList.add('show');
+                        controlBar.style.cssText = `
+                            transform: translateY(0) !important;
+                            opacity: 1 !important;
+                            visibility: visible !important;
+                            display: block !important;
+                            position: absolute !important;
+                            bottom: 0 !important;
+                            left: 0 !important;
+                            right: 0 !important;
+                            width: 100% !important;
+                            margin: 0 !important;
+                            z-index: 999999 !important;
+                            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 70%, transparent 100%) !important;
+                            padding: 10px 0px 15px 0px !important;
+                            box-sizing: border-box !important;
+                        `;
+                        console.log('Third attempt - Aggressive mobile controls with proper alignment');
+                        
+                        // Auto-hide after showing
+                        setTimeout(() => {
+                            if (!isDragging) {
+                                hideControlsDelayed();
+                            }
+                        }, 4000);
+                    }, 600);
                 }
             }
         }
@@ -1891,42 +2709,105 @@
             if (player) {
                 player.dispose();
             }
-        });
-
-        // Custom Control Bar Functions
+        });        // Custom Control Bar Functions
         function initializeCustomControls() {
             const controlBar = document.getElementById('customControlBar');
             const videoContainer = document.querySelector('.player-container');
             
-            // Show controls on mouse move/enter
-            videoContainer.addEventListener('mouseenter', showControls);
-            videoContainer.addEventListener('mousemove', showControls);
-            videoContainer.addEventListener('mouseleave', hideControlsDelayed);
-            
-            // Touch events for mobile
-            videoContainer.addEventListener('touchstart', showControls);
-            videoContainer.addEventListener('touchend', hideControlsDelayed);
-            
-            // Fullscreen mouse events
-            document.addEventListener('mouseenter', (e) => {
-                if (player && player.isFullscreen()) {
+            // Detect if we're on mobile/touch device
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                           ('ontouchstart' in window) || 
+                           (navigator.maxTouchPoints > 0);
+              // Show controls on mouse move/enter (desktop)
+            if (!isMobile) {
+                console.log('Setting up desktop mouse events for controls');
+                videoContainer.addEventListener('mouseenter', showControls);
+                videoContainer.addEventListener('mousemove', showControls);
+                videoContainer.addEventListener('mouseleave', hideControlsDelayed);
+                
+                // Also add click events for desktop
+                videoContainer.addEventListener('click', (e) => {
+                    if (!e.target.closest('.custom-control-bar')) {
+                        console.log('Desktop video container clicked - showing controls');
+                        showControls();
+                    }
+                });
+                
+                // Ensure controls are initially visible on desktop
+                setTimeout(() => {
+                    console.log('Desktop: Initial control visibility check');
                     showControls();
-                }
-            });
+                }, 500);
+            }
             
-            document.addEventListener('mousemove', (e) => {
-                if (player && player.isFullscreen()) {
+            // Touch events for mobile - improved handling
+            if (isMobile) {
+                let touchTimeout;
+                
+                videoContainer.addEventListener('touchstart', (e) => {
                     showControls();
-                }
-            });
+                    // Clear any existing timeout
+                    if (touchTimeout) {
+                        clearTimeout(touchTimeout);
+                    }
+                });
+                
+                videoContainer.addEventListener('touchend', (e) => {
+                    // On mobile, keep controls visible longer and only hide if not interacting with controls
+                    const target = e.target;
+                    const isControlElement = target.closest('.custom-control-bar') || 
+                                           target.closest('.custom-controls') || 
+                                           target.closest('.custom-btn') ||
+                                           target.closest('.custom-dropdown');
+                    
+                    if (!isControlElement) {
+                        // Hide controls after longer delay on mobile
+                        touchTimeout = setTimeout(() => {
+                            if (!isDragging) {
+                                hideControlsDelayed();
+                            }
+                        }, 5000); // 5 seconds instead of 3
+                    }
+                });
+                
+                // Keep controls visible when interacting with them on mobile
+                controlBar.addEventListener('touchstart', (e) => {
+                    e.stopPropagation();
+                    showControls();
+                    if (touchTimeout) {
+                        clearTimeout(touchTimeout);
+                    }
+                });
+                
+                // Show controls on any tap on video on mobile
+                videoContainer.addEventListener('click', (e) => {
+                    if (!e.target.closest('.custom-control-bar')) {
+                        showControls();
+                    }
+                });
+            }
             
-            document.addEventListener('mouseleave', (e) => {
-                if (player && player.isFullscreen()) {
-                    hideControlsDelayed();
-                }
-            });
-            
-            // Initialize all control buttons
+            // Fullscreen mouse events (for desktop)
+            if (!isMobile) {
+                document.addEventListener('mouseenter', (e) => {
+                    if (player && player.isFullscreen()) {
+                        showControls();
+                    }
+                });
+                
+                document.addEventListener('mousemove', (e) => {
+                    if (player && player.isFullscreen()) {
+                        showControls();
+                    }
+                });
+                
+                document.addEventListener('mouseleave', (e) => {
+                    if (player && player.isFullscreen()) {
+                        hideControlsDelayed();
+                    }
+                });
+            }
+              // Initialize all control buttons
             initializePlayButton();            initializeProgressBar();            initializeVolumeControls();
             initializeCaptionControls();
             initializeSpeedControls();
@@ -1938,13 +2819,168 @@
             
             // Show controls initially
             showControls();
+            
+            // On mobile, show controls for longer initially
+            if (isMobile) {
+                setTimeout(() => {
+                    if (!isDragging) {
+                        hideControlsDelayed();
+                    }
+                }, 5000);
+                
+                // Add resize listener for mobile to ensure controls always match video width
+                window.addEventListener('resize', () => {
+                    setTimeout(() => {
+                        const controlBar = document.getElementById('customControlBar');
+                        const playerContainer = document.querySelector('.player-container');
+                        if (controlBar && playerContainer) {
+                            const containerWidth = playerContainer.offsetWidth;
+                            controlBar.style.width = containerWidth + 'px';
+                            controlBar.style.left = '0px';
+                            controlBar.style.right = '0px';
+                        }
+                    }, 100);
+                });
+                
+                // Also handle orientation change
+                window.addEventListener('orientationchange', () => {
+                    setTimeout(() => {
+                        const controlBar = document.getElementById('customControlBar');
+                        const playerContainer = document.querySelector('.player-container');
+                        if (controlBar && playerContainer) {
+                            const containerWidth = playerContainer.offsetWidth;
+                            controlBar.style.width = containerWidth + 'px';
+                            controlBar.style.left = '0px';
+                            controlBar.style.right = '0px';
+                        }
+                    }, 300);
+                });
+            }
         }
-
+        
         function showControls() {
             const controlBar = document.getElementById('customControlBar');
+            if (!controlBar) {
+                console.error('Control bar not found!');
+                return;
+            }
+            
             controlBar.classList.add('show');
             
-            // Clear any existing timeout
+            // Debug for mobile
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                           ('ontouchstart' in window) || 
+                           (navigator.maxTouchPoints > 0);
+            
+            if (isMobile) {
+                console.log('Mobile device detected - forcing control visibility');
+                
+                // Check if we're in fullscreen
+                const isFullscreen = document.fullscreenElement || 
+                                    document.webkitFullscreenElement || 
+                                    document.mozFullScreenElement || 
+                                    document.msFullscreenElement ||
+                                    (player && player.isFullscreen());
+                
+                // Use different styles for fullscreen vs normal mode
+                if (isFullscreen) {
+                    controlBar.style.cssText = `
+                        transform: translateY(0) !important;
+                        opacity: 1 !important;
+                        visibility: visible !important;
+                        display: block !important;
+                        position: fixed !important;
+                        bottom: 0 !important;
+                        left: 0 !important;
+                        right: 0 !important;
+                        width: 100vw !important;
+                        z-index: 2147483647 !important;
+                        background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 70%, transparent 100%) !important;
+                        padding: 10px 0px 15px 0px !important;
+                    `;
+                    console.log('Mobile fullscreen controls applied');                } else {
+                    controlBar.style.cssText = `
+                        transform: translateY(0) !important;
+                        opacity: 1 !important;
+                        visibility: visible !important;
+                        display: block !important;
+                        position: absolute !important;
+                        bottom: 0 !important;
+                        left: 0 !important;
+                        right: 0 !important;
+                        width: 100% !important;
+                        margin: 0 !important;
+                        z-index: 999999 !important;
+                        background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 70%, transparent 100%) !important;
+                        padding: 10px 0px 15px 0px !important;
+                        box-sizing: border-box !important;
+                    `;
+                    
+                    // Fix alignment of child elements for non-fullscreen
+                    const progressContainer = controlBar.querySelector('.custom-progress-container');
+                    const controls = controlBar.querySelector('.custom-controls');
+                    
+                    if (progressContainer) {
+                        progressContainer.style.cssText = `
+                            margin-left: 15px !important;
+                            margin-right: 15px !important;
+                            margin-bottom: 15px !important;
+                            width: calc(100% - 30px) !important;
+                            box-sizing: border-box !important;
+                        `;
+                    }
+                    
+                    if (controls) {
+                        controls.style.cssText = `
+                            padding: 0 15px !important;
+                            width: 100% !important;
+                            box-sizing: border-box !important;
+                            display: flex !important;
+                            align-items: center !important;
+                            justify-content: space-between !important;
+                        `;
+                    }
+                    
+                    console.log('Mobile normal controls applied with proper alignment');
+                }
+                
+                // Force show all child elements too
+                const childElements = controlBar.querySelectorAll('*');
+                childElements.forEach(child => {
+                    child.style.visibility = 'visible';
+                    child.style.opacity = '1';                });
+            } else {
+                // Desktop/PC controls
+                console.log('Desktop device detected - applying standard control visibility');
+                
+                // Apply standard desktop controls styling
+                controlBar.style.cssText = `
+                    transform: translateY(0) !important;
+                    opacity: 1 !important;
+                    visibility: visible !important;
+                    display: block !important;
+                    position: absolute !important;
+                    bottom: 0 !important;
+                    left: 0 !important;
+                    right: 0 !important;
+                    width: 100% !important;
+                    margin: 0 !important;
+                    z-index: 999999 !important;
+                    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 70%, transparent 100%) !important;
+                    padding: 10px 0px 15px 0px !important;
+                    box-sizing: border-box !important;
+                `;
+                
+                // Ensure all child elements are visible on desktop too
+                const childElements = controlBar.querySelectorAll('*');
+                childElements.forEach(child => {
+                    child.style.visibility = 'visible';
+                    child.style.opacity = '1';
+                });
+                
+                console.log('Desktop controls applied successfully');
+            }
+              // Clear any existing timeout
             if (controlBarTimeout) {
                 clearTimeout(controlBarTimeout);
             }
@@ -1955,24 +2991,44 @@
                 clearTimeout(controlBarTimeout);
             }
             
+            // Detect if we're on mobile/touch device
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                           ('ontouchstart' in window) || 
+                           (navigator.maxTouchPoints > 0);
+            
+            // Use longer timeout on mobile devices, especially longer after play/pause
+            const timeout = isMobile ? 6000 : 4000; // Increased timeout
+            
+            console.log(`Hiding controls in ${timeout}ms`);
+            
             controlBarTimeout = setTimeout(() => {
                 const controlBar = document.getElementById('customControlBar');
-                if (!isDragging) {
+                if (!isDragging && controlBar) {
+                    console.log('Auto-hiding controls');
                     controlBar.classList.remove('show');
+                } else {
+                    console.log('Controls not hidden - user is dragging or bar not found');
                 }
-            }, 3000);
+            }, timeout);
         }
 
         function initializePlayButton() {
             const playBtn = document.getElementById('playBtn');
             const playIcon = playBtn.querySelector('span');
-            
-            playBtn.addEventListener('click', () => {
+              playBtn.addEventListener('click', () => {
+                console.log('Play button clicked');
+                
                 if (player.paused()) {
                     player.play();
                 } else {
                     player.pause();
                 }
+                
+                // Ensure controls are visible after play/pause
+                setTimeout(() => {
+                    showControls();
+                    console.log('Controls shown after play/pause button click');
+                }, 50);
             });
             
             // Update play button state
@@ -2044,7 +3100,9 @@
             progressBar.addEventListener('mouseleave', () => {
                 timeTooltip.style.opacity = '0';
             });
-        }        function initializeVolumeControls() {
+        }
+        
+        function initializeVolumeControls() {
             const volumeBtn = document.getElementById('volumeBtn');
             const volumeSlider = document.getElementById('volumeSlider');
             const volumeFilled = document.getElementById('volumeFilled');
@@ -2104,21 +3162,31 @@
                 volumeHandle.style.left = `${initialVolume * 100}%`;
             }, 100);
         }
-
+        
         function initializeCaptionControls() {
             const captionDropdown = document.getElementById('captionDropdown');
             const captionBtn = document.getElementById('captionBtn');
             
-            captionBtn.addEventListener('click', () => {
-                captionDropdown.classList.toggle('active');
+            captionBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 
-                // Close other dropdowns
+                // Close other dropdowns first
                 document.getElementById('speedDropdown').classList.remove('active');
+                
+                // Toggle this dropdown
+                const isActive = captionDropdown.classList.contains('active');
+                captionDropdown.classList.toggle('active', !isActive);
+                
+                console.log('Caption dropdown toggled:', !isActive);
             });
             
             // Handle caption menu items
             captionDropdown.querySelectorAll('.custom-dropdown-item').forEach(item => {
                 item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
                     const track = e.target.dataset.track;
                     if (track === 'settings') {
                         captionDropdown.classList.remove('active');
@@ -2132,8 +3200,7 @@
                             if (tracks[i].language === 'ml') {
                                 tracks[i].mode = track === 'ml' ? 'showing' : 'hidden';
                                 break;
-                            }
-                        }
+                            }                        }
                         // Update active state
                         captionDropdown.querySelectorAll('.custom-dropdown-item').forEach(el => 
                             el.classList.remove('active'));
@@ -2144,22 +3211,39 @@
                     }
                 });
             });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!captionDropdown.contains(e.target)) {
+                    captionDropdown.classList.remove('active');
+                }
+            });
         }
-
+        
         function initializeSpeedControls() {
             const speedDropdown = document.getElementById('speedDropdown');
             const speedBtn = document.getElementById('speedBtn');
             
-            speedBtn.addEventListener('click', () => {
-                speedDropdown.classList.toggle('active');
+            speedBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 
-                // Close other dropdowns
+                // Close other dropdowns first
                 document.getElementById('captionDropdown').classList.remove('active');
+                
+                // Toggle this dropdown
+                const isActive = speedDropdown.classList.contains('active');
+                speedDropdown.classList.toggle('active', !isActive);
+                
+                console.log('Speed dropdown toggled:', !isActive);
             });
             
             // Handle speed menu items
             speedDropdown.querySelectorAll('.custom-dropdown-item').forEach(item => {
                 item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
                     const speed = parseFloat(e.target.dataset.speed);
                     player.playbackRate(speed);
                     
@@ -2170,7 +3254,15 @@
                     
                     speedDropdown.classList.remove('active');
                 });
-            });        }
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!speedDropdown.contains(e.target)) {
+                    speedDropdown.classList.remove('active');
+                }
+            });
+        }
 
         function initializeQualityButton() {
             const qualityBtn = document.getElementById('qualityBtn');
@@ -2178,9 +3270,10 @@
             qualityBtn.addEventListener('click', () => {
                 // For now, just show an alert since only Full HD is available
                 // You can expand this to show a dropdown when more qualities are available
-                alert('Current Quality: Full HD (1080p)\n\nOnly Full HD is currently available for this video.');
-            });
-        }        function initializeFullscreenButton() {
+                alert('Current Quality: Full HD (1080p)\n\nOnly Full HD is currently available for this video.');            });
+        }
+        
+        function initializeFullscreenButton() {
             const fullscreenBtn = document.getElementById('fullscreenBtn');
             
             // Check if device is mobile
@@ -2216,33 +3309,154 @@
                     screen.mozUnlockOrientation();
                 }
             }
-            
-            fullscreenBtn.addEventListener('click', () => {
-                if (player.isFullscreen()) {
+              fullscreenBtn.addEventListener('click', () => {
+                const isMobile = isMobileDevice();
+                  if (player.isFullscreen()) {
                     player.exitFullscreen();
                     // Unlock orientation when exiting fullscreen on mobile
-                    if (isMobileDevice()) {
+                    if (isMobile) {
                         unlockOrientation();
+                        
+                        // Multiple aggressive attempts to ensure controls are visible after exiting fullscreen
+                        console.log('Exiting fullscreen on mobile - ensuring controls show');
+                        
+                        setTimeout(() => {
+                            console.log('First attempt - ensuring mobile controls after fullscreen exit');
+                            showControls();
+                        }, 200);
+                        
+                        setTimeout(() => {
+                            console.log('Second attempt - ensuring mobile controls after fullscreen exit');
+                            const controlBar = document.getElementById('customControlBar');
+                            if (controlBar) {
+                                controlBar.classList.add('show');
+                                controlBar.style.cssText = `
+                                    transform: translateY(0) !important;
+                                    opacity: 1 !important;
+                                    visibility: visible !important;
+                                    display: block !important;
+                                    position: absolute !important;
+                                    bottom: 0 !important;
+                                    left: 0 !important;
+                                    right: 0 !important;
+                                    width: 100vw !important;
+                                    z-index: 999999 !important;
+                                    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 70%, transparent 100%) !important;
+                                    padding: 10px 0px 15px 0px !important;
+                                `;
+                            }
+                        }, 500);                        setTimeout(() => {
+                            console.log('Third attempt - final ensure mobile controls after fullscreen exit');
+                            showControls();
+                            
+                            // EMERGENCY: Force controls visible with direct DOM manipulation
+                            const controlBar = document.getElementById('customControlBar');
+                            if (controlBar) {
+                                console.log('Emergency force - making controls visible');
+                                controlBar.classList.add('show');
+                                controlBar.style.transform = 'translateY(0)';
+                                controlBar.style.opacity = '1';
+                                controlBar.style.visibility = 'visible';
+                                controlBar.style.display = 'block';
+                                controlBar.style.position = 'absolute';
+                                controlBar.style.bottom = '0';
+                                controlBar.style.left = '0';
+                                controlBar.style.right = '0';
+                                controlBar.style.width = '100%';
+                                controlBar.style.zIndex = '999999';
+                                
+                                // Force all children visible too
+                                Array.from(controlBar.children).forEach(child => {
+                                    child.style.visibility = 'visible';
+                                    child.style.opacity = '1';
+                                    child.style.display = 'block';
+                                });
+                            }
+                            
+                            // Start continuous checking to ensure controls stay visible
+                            ensureControlsAfterFullscreenExit();
+                        }, 800);
                     }
                 } else {
                     player.requestFullscreen();
                     // Lock to landscape when entering fullscreen on mobile
-                    if (isMobileDevice()) {
+                    if (isMobile) {
                         // Small delay to ensure fullscreen is active
                         setTimeout(() => {
                             lockToLandscape();
-                        }, 100);
+                            // Ensure controls are visible in fullscreen on mobile
+                            console.log('Ensuring mobile controls in fullscreen');
+                            showControls();
+                        }, 200);
                     }
                 }
-            });
-            
-            // Listen for fullscreen changes to handle orientation
+            });            // Listen for fullscreen changes to handle orientation
             player.on('fullscreenchange', () => {
-                if (isMobileDevice()) {
+                const isMobile = isMobileDevice();
+                if (isMobile) {
                     if (player.isFullscreen()) {
                         lockToLandscape();
+                        // Ensure controls show in fullscreen
+                        setTimeout(() => {
+                            console.log('Fullscreen entered - showing controls on mobile');
+                            showControls();
+                        }, 300);
                     } else {
                         unlockOrientation();
+                        // AGGRESSIVE: Ensure controls show after exiting fullscreen
+                        console.log('Fullscreen exited on mobile - aggressively ensuring controls');
+                        
+                        // Immediate attempt
+                        showControls();
+                        
+                        // First backup attempt
+                        setTimeout(() => {
+                            console.log('Backup attempt 1 - forcing controls after fullscreen exit');
+                            const controlBar = document.getElementById('customControlBar');
+                            if (controlBar) {
+                                controlBar.classList.add('show');
+                                controlBar.style.cssText = `
+                                    transform: translateY(0) !important;
+                                    opacity: 1 !important;
+                                    visibility: visible !important;
+                                    display: block !important;
+                                    position: absolute !important;
+                                    bottom: 0 !important;
+                                    left: 0 !important;
+                                    right: 0 !important;
+                                    width: 100vw !important;
+                                    z-index: 999999 !important;
+                                    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 70%, transparent 100%) !important;
+                                    padding: 10px 0px 15px 0px !important;
+                                `;
+                                
+                                // Force child elements visible
+                                controlBar.querySelectorAll('*').forEach(child => {
+                                    child.style.visibility = 'visible';
+                                    child.style.opacity = '1';
+                                });
+                            }
+                        }, 300);
+                        
+                        // Second backup attempt
+                        setTimeout(() => {
+                            console.log('Backup attempt 2 - final force controls after fullscreen exit');
+                            showControls();
+                        }, 600);
+                          // Third backup attempt
+                        setTimeout(() => {
+                            console.log('Backup attempt 3 - ultimate force controls after fullscreen exit');
+                            const controlBar = document.getElementById('customControlBar');
+                            if (controlBar) {
+                                controlBar.classList.add('show');
+                                controlBar.style.transform = 'translateY(0)';
+                                controlBar.style.opacity = '1';
+                                controlBar.style.visibility = 'visible';
+                                controlBar.style.display = 'block';
+                            }
+                              // Start continuous checking
+                            ensureControlsAfterFullscreenExit();
+                        }, 1000);
                     }
                 }
             });
@@ -2265,8 +3479,7 @@
                     const bufferPercent = (buffered.end(buffered.length - 1) / duration) * 100;
                     document.getElementById('progressBuffer').style.width = `${bufferPercent}%`;
                 }
-                
-                // Update time display
+                  // Update time display
                 document.getElementById('currentTime').textContent = formatTime(currentTime);
                 document.getElementById('duration').textContent = formatTime(duration);
             }
@@ -2278,14 +3491,16 @@
             return `${minutes}:${secs.toString().padStart(2, '0')}`;
         }
 
-        // Close dropdowns when clicking outside
+        // Close dropdowns when clicking outside        // Close dropdowns when clicking outside
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.custom-dropdown')) {
                 document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
                     dropdown.classList.remove('active');
-                });
-            }
-        });
+                });            }        });
+        
+    // Removed DOMContentLoaded closing - testing parser expectation
+    
+    // Functions defined outside DOMContentLoaded scope
     </script>
 </body>
 </html>
