@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Anuja.2024.WebRip.480p.x265.10bit.Hin.Eng.MSubs-mkvCinemas - Video Player</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        video { width: 100%; max-width: 900px; height: auto; }
+    </style>
+</head>
+<body>
+    <video id="video" controls>
+        
+        <p>Your browser doesn't support HLS playback.</p>
+    </video>
+    <script>
+        const video = document.getElementById('video');
+        const videoSrc = './Anuja.2024.WebRip.480p.x265.10bit.Hin.Eng.MSubs-mkvCinemas.m3u8';
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = videoSrc;
+        }
+    </script>
+</body>
+</html>
